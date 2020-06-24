@@ -16,7 +16,7 @@ public class BatchExecutor {
 
     public static final int DEFAULT_SIZE = 10;
 
-    public static final int DEFAULT_AWAIT = 8;
+    public static final int DEFAULT_AWAIT_SECONDS = 8;
 
     /**
      * @param size       线程池大小
@@ -40,7 +40,7 @@ public class BatchExecutor {
         pool.shutdown();
         try {
             Map<V, R> result = new HashMap<>();
-            boolean isTerminated = pool.awaitTermination(DEFAULT_AWAIT, TimeUnit.SECONDS);
+            boolean isTerminated = pool.awaitTermination(DEFAULT_AWAIT_SECONDS, TimeUnit.SECONDS);
             if (isTerminated) {
                 for (Map.Entry<V, Future<R>> entry : rMap.entrySet()) {
                     if (entry.getValue().get() != null) {
