@@ -9,7 +9,9 @@ import java.util.function.Predicate;
  */
 public class MaskUtil {
 
-    private static final String DEFAULT_MASK = "*";
+    private static final String DEFAULT_MASK_CHAR = "*";
+
+    private static final int DEFAULT_MASK_LENGTH = 3;
 
     public static String codeMask(String target, String mask) {
         if (StringUtils.isEmpty(target)) {
@@ -19,7 +21,7 @@ public class MaskUtil {
     }
 
     public static String codeMask(String target) {
-        return codeMask(target, DEFAULT_MASK);
+        return codeMask(target, DEFAULT_MASK_CHAR);
     }
 
     public static String phoneMask(String target, String mask) {
@@ -30,7 +32,7 @@ public class MaskUtil {
     }
 
     public static String phoneMask(String target) {
-        return phoneMask(target, DEFAULT_MASK);
+        return phoneMask(target, DEFAULT_MASK_CHAR);
     }
 
     public static String emailMask(String target, String mask) {
@@ -42,7 +44,7 @@ public class MaskUtil {
     }
 
     public static String emailMask(String target) {
-        return emailMask(target, DEFAULT_MASK);
+        return emailMask(target, DEFAULT_MASK_CHAR);
     }
 
     public static String mask(String target, String mask, Predicate<Integer> predicate) {
@@ -51,11 +53,16 @@ public class MaskUtil {
         }
         StringBuilder stringBuilder = new StringBuilder();
         char[] seq = target.toCharArray();
+        int cursor = 0;
         for (int i = 0; i < seq.length; i++) {
             if (predicate.test(i)) {
                 stringBuilder.append(seq[i]);
+                cursor = 0;
             } else {
-                stringBuilder.append(mask);
+                if (cursor <= DEFAULT_MASK_LENGTH) {
+                    stringBuilder.append(mask);
+                }
+                cursor ++;
             }
         }
         return stringBuilder.toString();
